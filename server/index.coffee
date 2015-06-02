@@ -8,4 +8,6 @@
 express = require 'express'
 app = express()
 
-app.listen 8090
+port = process.env.PORT || 3939
+
+app.listen port
