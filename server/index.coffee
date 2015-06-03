@@ -153,7 +153,31 @@ app.get '/summoner/:name', (req, res) ->
           d[key] = 0
 
   .then () ->
-    hdbData['perfChart'] = [12, 9, 7, 8, 5]
+
+    # performance chart 1
+
+    # construct X array
+    arrayX = ['1','2','3','4','5', '6', '7' ,'8', '9', '10']
+
+    # construct Y array
+    arrayY = []
+    _.each gameData, (d, i) ->
+      arrayY.push d.score
+
+
+    hdbData['chart1'] = "<script>
+    new Chartist.Line('.perf-chart', {
+      labels: [#{arrayX.join(",")}],
+      series: [
+        [#{arrayY.join(",")}]
+      ]
+    }, {
+      fullWidth: true,
+      chartPadding: {
+        right: 40
+      }
+    });
+    </script>"
   .then () ->
     console.log 'sending response back'
     res.render 'mainView', hdbData

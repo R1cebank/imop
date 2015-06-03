@@ -68,11 +68,11 @@
     }).then(function() {
       return summary = model.getSummary(summonerData['id']);
     }).then(function(data) {
-      var i, len, map, ref, row;
+      var j, len, map, ref, row;
       map = {};
       ref = data['playerStatSummaries'];
-      for (i = 0, len = ref.length; i < len; i++) {
-        row = ref[i];
+      for (j = 0, len = ref.length; j < len; j++) {
+        row = ref[j];
         map[row.playerStatSummaryType] = row.wins;
       }
       hdbData['unranked'] = map['Unranked'];
@@ -81,11 +81,11 @@
       var recent;
       return recent = model.getRecentGames(summonerData['id']);
     }).then(function(data) {
-      var gameResult, games, i, len, playerDataPromises, row, teamID;
+      var gameResult, games, j, len, playerDataPromises, row, teamID;
       playerDataPromises = [];
       games = data['games'];
-      for (i = 0, len = games.length; i < len; i++) {
-        row = games[i];
+      for (j = 0, len = games.length; j < len; j++) {
+        row = games[j];
         teamID = row.teamId;
 
         /*for player in row.fellowPlayers
@@ -140,7 +140,13 @@
         });
       });
     }).then(function() {
-      return hdbData['perfChart'] = [12, 9, 7, 8, 5];
+      var arrayX, arrayY;
+      arrayX = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+      arrayY = [];
+      _.each(gameData, function(d, i) {
+        return arrayY.push(d.score);
+      });
+      return hdbData['chart1'] = "<script> new Chartist.Line('.perf-chart', { labels: [" + (arrayX.join(",")) + "], series: [ [" + (arrayY.join(",")) + "] ] }, { fullWidth: true, chartPadding: { right: 40 } }); </script>";
     }).then(function() {
       console.log('sending response back');
       return res.render('mainView', hdbData);
