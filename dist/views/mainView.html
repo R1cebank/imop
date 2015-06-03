@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>{{name}}</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="../css/normalize.css">
+  <link rel="stylesheet" href="../css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="../image/png" href="images/favicon.png">
+  <style>
+            .round {
+                border-radius: 50%;
+                overflow: hidden;
+                width: 100px;
+                height: 100px;
+            }
+            .round img {
+                display: block;
+                height: 100%;
+                width: 100%;
+                min-width: 100%;
+                min-height: 100%;
+            }
+            .alignleft {
+              float: left;
+            }
+            .alignright {
+              float: right;
+            }
+            .win {
+              background-color: #4FBDF2;
+            }
+            .win-title {
+              color: #FFFFFF;
+              padding-left: 5px;
+              padding-right: 5px;
+            }
+            progress[value] {
+              width: 100%;
+              -webkit-appearance: none;
+              appearance: none;
+            }
+  </style>
+  <link rel="stylesheet" href="../css/chartist.min.css">
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row" style="margin-top: 5%; background-color:#ECF0F1">
+      <div class="two columns" style="margin-top: 4%; margin-left: 1%">
+        <div class="round">
+          <img src="http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/{{iconid}}.png" />
+        </div>
+      </div>
+      <div class="nine columns" style="margin-top: 2%">
+        <div class="row">
+          <div class="seven columns" style="margin-top: 3%">
+            <h5>{{name}}</h5>
+          </div>
+          <div class="five columns" style="margin-top: 3%">
+            <h5>Level {{level}}</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="seven columns">
+            <h8>Unranked win {{unranked}} Ranked Solo {{RankedSolo5x5}}</h8>
+          </div>
+          <div class="five columns">
+            <form action="mainView" method="get">
+              <input class="button-primary" type="submit" value="refresh data">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 5%">
+
+      <div class="seven columns">
+        <!-- Start content  -->
+        {{#each gamedata}}
+        <div class="row">
+          <div class="row win">
+            <span class="alignleft win-title">{{subtype}}</span>
+            <span class="alignright win-title">win (25m 3s)</span>
+          </div>
+          <div class="row">
+            <div class="three columns" style="margin-top: 2%">
+              <div class="round">
+                <img src="../images/riven.png" />
+              </div>
+            </div>
+            <div class="three columns" style="margin-top: 5%">
+              <div class="row">
+                {{kill}}/{{death}}/{{assist}}
+              </div>
+              <div class="row">
+                {{kda}}:1 KDA
+              </div>
+              <div class="row">
+                Double
+              </div>
+            </div>
+          <div class="three columns" style="margin-top: 5%">
+            <div class="row">
+              Level {{level}}
+            </div>
+            <div class="row">
+              {{cs}} CS
+            </div>
+            <div class="row">
+              C/Kill 45%
+            </div>
+          </div>
+          <div class="three columns" style="margin-top: 1%">
+            <div class="row">
+              deallate
+            </div>
+            <div class="row">
+              BuckyMcbride
+            </div>
+            <div class="row">
+              WhateverYouSay
+            </div>
+            <div class="row">
+              Hachune Miku
+            </div>
+            <div class="row">
+              ShawnSmash
+            </div>
+          </div>
+          <div class="row">
+            <div class="two columns">
+              OP meter
+            </div>
+            <div class="ten columns">
+              <progress max="100" value="80"></progress>
+            </div>
+          </div>
+          </div>
+        </div>
+        <!-- Stop content -->
+        {{/each}}
+      </div>
+
+      <div class="five columns">
+        <div class="row">
+          <h5>OP chart</h5>
+        </div>
+        <div class="row">
+          <div class="ct-chart op-chart ct-golden-section"></div>
+        </div>
+        <div class="row">
+          <h5>performance chart</h5>
+        </div>
+        <div class="row">
+          <div class="ct-chart perf-chart ct-golden-section"></div>
+        </div>
+        <div class="row">
+          <h5>recent played with</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script src="../js/chartist.min.js">
+</script>
+<script>
+new Chartist.Pie('.op-chart', {
+  series: [20, 10, 30, 20, 20],
+  labels: ['Hachune', 'Whateveryousay', 'player 4', 'player 3', 'player5']
+}, {
+  donut: true,
+  donutWidth: 60,
+  startAngle: 270,
+  total: 200,
+  showLabel: true
+});
+new Chartist.Line('.perf-chart', {
+  labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+  series: [
+    [12, 9, 7, 8, 5],
+    [2, 1, 3.5, 7, 3],
+    [1, 3, 4, 5, 6]
+  ]
+}, {
+  fullWidth: true,
+  chartPadding: {
+    right: 40
+  }
+});
+
+</script>
+</body>
+</html>
