@@ -81,23 +81,23 @@
       var recent;
       return recent = model.getRecentGames(summonerData['id']);
     }).then(function(data) {
-      var gameResult, games, i, j, len, len1, player, playerDataPromises, players, ref, row, teamID;
-      players = [];
+      var gameResult, games, i, len, playerDataPromises, row, teamID;
       playerDataPromises = [];
       games = data['games'];
       for (i = 0, len = games.length; i < len; i++) {
         row = games[i];
         teamID = row.teamId;
-        ref = row.fellowPlayers;
-        for (j = 0, len1 = ref.length; j < len1; j++) {
-          player = ref[j];
-          if (teamID === player.teamId) {
-            players.push(player.summonerId);
-          }
-        }
+
+        /*for player in row.fellowPlayers
+          if teamID == player.teamId
+            players.push player.summonerId
+         */
         gameResult = "lose";
         if (row.stats.win) {
           gameResult = "win";
+        }
+        if (row.championId === 0) {
+          continue;
         }
         gameData.push({
           subtype: row.subType.toLowerCase(),
@@ -116,15 +116,31 @@
           ward: row.stats.wardPlaced,
           ip: row.ipEarned,
           killpermin: (row.stats.championsKilled / Math.floor(row.stats.timePlayed / 60)).toFixed(3),
-          op: model.calculateOPS(row)
+          score: model.calculateOPS(row),
+          matchID: row.gameId
         });
-        players = [];
       }
       return hdbData['gamedata'] = gameData;
     }).then(function() {
       return _.each(gameData, function(d) {
-        return d.championName = championMap[d.championID];
+        if (championMap[d.championID] === void 0) {
+          d.url = 'http://motiondex.com/NC.png';
+          d.championName = 'new champion';
+        } else {
+          d.championName = championMap[d.championID];
+          d.url = "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/champion/" + championMap[d.championID] + ".png";
+        }
+        if (isNaN(d.kda)) {
+          d.kda = d.kill;
+        }
+        return Object.keys(d).forEach(function(key) {
+          if (d[key] === void 0) {
+            return d[key] = 0;
+          }
+        });
       });
+    }).then(function() {
+      return hdbData['perfChart'] = [12, 9, 7, 8, 5];
     }).then(function() {
       console.log('sending response back');
       return res.render('mainView', hdbData);

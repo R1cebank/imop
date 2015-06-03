@@ -19,6 +19,7 @@ _ = require 'lodash'
 config = require './config/server-config.json'
 champions = require './config/champion.json'
 championMap = {}
+
 # construct champion name and ID map
 Object.keys(champions.data).forEach (key) ->
   championMap[champions.data[key].key] = key
@@ -30,6 +31,7 @@ model = require('./models.js')()
 app.set 'view engine', 'html'
 app.engine 'html', hbs.__express
 app.set 'views', path.join __dirname, 'views/'
+
 # Hosting public files for express
 app.use express.static path.join __dirname, 'views/public/'
 
@@ -37,6 +39,7 @@ app.use express.static path.join __dirname, 'views/public/'
 app.get '/', (req, res) ->
   res.render 'index'
 
+# used for riot application verification
 app.get '/riot.txt', (req, res) ->
   res.send '997c3ed4-8103-481c-8cec-42e688efd5c5'
 
@@ -47,8 +50,10 @@ app.get '/summoner/:name', (req, res) ->
   gameData = [ ]
   summary = { }
   hdbData = { }
+
   # get the username from url
   console.log "User #{req.params['name']} querying"
+
   # get a promise for summoner info
   summoner = model.getSummonerByName summonerName
 
@@ -63,6 +68,7 @@ app.get '/summoner/:name', (req, res) ->
 
     # create a new promise query for the summoner summary
     summary = model.getSummary summonerData['id']
+
   .then (data) ->
 
     # using the summary data from the promise
@@ -76,24 +82,34 @@ app.get '/summoner/:name', (req, res) ->
 
     # create a new promise for recent matches
     recent = model.getRecentGames summonerData['id']
+
   .then (data) ->
 
     # using the data to get metrics
-    players = [ ]
+    # players = [ ]
     playerDataPromises = [ ]
     games = data['games']
+
     # contruct the array for template
     for row in games
       teamID = row.teamId
-      for player in row.fellowPlayers
+      ###for player in row.fellowPlayers
         if teamID == player.teamId
           players.push player.summonerId
+      ###
+
       # console.log players
       # setting win or lose
+
       gameResult = "lose"
       gameResult = "win" if row.stats.win
+
+      # eliminate ones with no champion
+      if row.championId is 0
+        continue
+
       gameData.push
-        subtype: row.subType.toLowerCase()
+        subtype: row.subType.toLowerCase()  # game type
         kill:    row.stats.championsKilled
         death:   row.stats.numDeaths
         assist:  row.stats.assists
@@ -110,12 +126,12 @@ app.get '/summoner/:name', (req, res) ->
         ip:         row.ipEarned
         killpermin: (row.stats.championsKilled /
         Math.floor(row.stats.timePlayed / 60)).toFixed(3)
-        op:         model.calculateOPS(row)
+        score:         model.calculateOPS(row)
         matchID:    row.gameId
 
       # playerDataPromises.push model.getSummonersById players
 
-      players = [ ]
+      # players = [ ]
 
     # console.log gameData
     hdbData['gamedata'] = gameData
@@ -123,8 +139,21 @@ app.get '/summoner/:name', (req, res) ->
     # return Promise.all(playerDataPromises)
   .then () ->
     _.each gameData, (d) ->
-      d.championName = championMap[d.championID]
+      if championMap[d.championID] is undefined
+        d.url = 'http://motiondex.com/NC.png'
+        d.championName = 'new champion'
+      else
+        d.championName = championMap[d.championID]
+        d.url = "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/champion/#{championMap[d.championID]}.png"
 
+      if isNaN d.kda
+        d.kda = d.kill
+      Object.keys(d).forEach (key) ->
+        if d[key] is undefined
+          d[key] = 0
+
+  .then () ->
+    hdbData['perfChart'] = [12, 9, 7, 8, 5]
   .then () ->
     console.log 'sending response back'
     res.render 'mainView', hdbData

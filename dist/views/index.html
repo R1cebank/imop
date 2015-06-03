@@ -26,6 +26,12 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="images/favicon.png">
 
+  <script>
+  function submit () {
+     window.location = "/summoner/" + $('#summonerName').val();
+   }
+  </script>
+
 </head>
 <body>
 
@@ -35,7 +41,7 @@
     <div class="row">
       <div class="six columns" style="margin-top: 25%">
         <img src="images/op.png" width=50%>
-        <form action="" method="get">
+        <form id="myform">
           <input class="u-full-width" type="text" placeholder="summoner name" id="summonerName">
           <input class="button-primary" type="button" value="AM I OP?" id="submitBtn">
         </form>
@@ -47,8 +53,10 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script src ="js/jquery-1.11.3.min.js"></script>
 <script type='text/javascript'>
-  $('#submitBtn').click(function() {
-     window.location = "/summoner/" + $('#summonerName').val();
+  $('#submitBtn').click(submit);
+  $('#myform').submit(function() {
+    submit();
+    return false;
   });
 </script>
 </body>

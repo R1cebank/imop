@@ -122,6 +122,49 @@ module.exports = () ->
         ratioPackage[key] = 0.055
     damageMultifier = ratioPackage.kda * ratioPackage.damageRatio *
     ratioPackage.turretModifier
-    console.log damageMultifier
+    console.log "dmg mult: " + damageMultifier
+
+    # calculate actual score
+    wardScore = (data.stats.wardPlaced/10) * 0.2
+    dmgScore = (data.stats.totalDamageDealt / data.stats.totalDamageTaken)*0.3*
+    damageMultifier
+    goldScore = (data.stats.goldEarned / data.stats.goldSpent) * 0.1
+    creepScore = ((data.stats.minionsKilled / (data.stats.timePlayed / 60)) / 6) * 0.4
+
+
+    # adjusting them to average if NaN
+    if isNaN wardScore
+      wardScore = 0.035
+    if isNaN dmgScore
+      wardScore = 0.3 * damageMultifier
+    if isNaN goldScore
+      wardScore = 0.109
+    if isNaN creepScore
+      wardScore = 0.16667
+
+
+    console.log '#################'
+    console.log "#{wardScore}"
+    console.log "#{dmgScore}}"
+    console.log "#{goldScore}"
+    console.log "#{creepScore}"
+    console.log '#################'
+
+    # calculate fnal score
+    finalScore1 = wardScore + dmgScore + goldScore + creepScore
+    if finalScore1 < 1
+      finalScore1 = finalScore1 * 100
+    else
+      # adjust final score if over 1
+      ipScore = (data.ipEarned / 144) * 0.1
+      console.log "before adjust: #{finalScore1}"
+      score = (finalScore1 / Math.ceil(finalScore1)) * 0.9
+      console.log "ipScore #{ipScore} score #{score}"
+      finalScore1 = (ipScore + score) * 100
+
+
+    console.log finalScore1
+
+    return finalScore1
 
   return self
