@@ -105,7 +105,7 @@
           death: row.stats.numDeaths,
           assist: row.stats.assists,
           level: row.stats.level,
-          kda: (row.stats.championsKilled / row.stats.numDeaths).toFixed(3),
+          kda: ((row.stats.championsKilled + row.stats.assists) / row.stats.numDeaths).toFixed(3),
           cs: row.stats.minionsKilled,
           timeM: Math.floor(row.stats.timePlayed / 60),
           timeS: row.stats.timePlayed - Math.floor(row.stats.timePlayed / 60) * 60,
@@ -147,6 +147,30 @@
         return arrayY.push(d.score);
       });
       return hdbData['chart1'] = "<script> new Chartist.Line('.perf-chart', { labels: [" + (arrayX.join(",")) + "], series: [ [" + (arrayY.join(",")) + "] ] }, { fullWidth: true, chartPadding: { right: 40 } }); </script>";
+    }).then(function() {
+      var arrayX, arrayY;
+      arrayX = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+      arrayY = [];
+      _.each(gameData, function(d, i) {
+        return arrayY.push(d.cs / d.timeM);
+      });
+      return hdbData['chart2'] = "<script> new Chartist.Line('.cs-chart', { labels: [" + (arrayX.join(",")) + "], series: [ [" + (arrayY.join(",")) + "] ] }, { fullWidth: true, chartPadding: { right: 40 } }); </script>";
+    }).then(function() {
+      var arrayX, arrayY;
+      arrayX = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+      arrayY = [];
+      _.each(gameData, function(d, i) {
+        return arrayY.push(d.kda);
+      });
+      return hdbData['chart3'] = "<script> new Chartist.Line('.kda-chart', { labels: [" + (arrayX.join(",")) + "], series: [ [" + (arrayY.join(",")) + "] ] }, { fullWidth: true, chartPadding: { right: 40 } }); </script>";
+    }).then(function() {
+      var arrayX, arrayY;
+      arrayX = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+      arrayY = [];
+      _.each(gameData, function(d, i) {
+        return arrayY.push(d.killpermin);
+      });
+      return hdbData['chart4'] = "<script> new Chartist.Line('.kpm-chart', { labels: [" + (arrayX.join(",")) + "], series: [ [" + (arrayY.join(",")) + "] ] }, { fullWidth: true, chartPadding: { right: 40 } }); </script>";
     }).then(function() {
       console.log('sending response back');
       return res.render('mainView', hdbData);

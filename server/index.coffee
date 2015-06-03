@@ -114,7 +114,7 @@ app.get '/summoner/:name', (req, res) ->
         death:   row.stats.numDeaths
         assist:  row.stats.assists
         level:   row.stats.level
-        kda:     (row.stats.championsKilled / row.stats.numDeaths).toFixed(3)
+        kda:     ((row.stats.championsKilled + row.stats.assists) / row.stats.numDeaths).toFixed(3)
         cs:      row.stats.minionsKilled
         timeM:   Math.floor(row.stats.timePlayed / 60)
         timeS:   row.stats.timePlayed-Math.floor(row.stats.timePlayed / 60) * 60
@@ -167,6 +167,78 @@ app.get '/summoner/:name', (req, res) ->
 
     hdbData['chart1'] = "<script>
     new Chartist.Line('.perf-chart', {
+      labels: [#{arrayX.join(",")}],
+      series: [
+        [#{arrayY.join(",")}]
+      ]
+    }, {
+      fullWidth: true,
+      chartPadding: {
+        right: 40
+      }
+    });
+    </script>"
+  .then () ->
+    # building chart #2
+    # construct X array
+    arrayX = ['1','2','3','4','5', '6', '7' ,'8', '9', '10']
+
+    # construct Y array
+    arrayY = []
+    _.each gameData, (d, i) ->
+      arrayY.push (d.cs / d.timeM)
+
+
+    hdbData['chart2'] = "<script>
+    new Chartist.Line('.cs-chart', {
+      labels: [#{arrayX.join(",")}],
+      series: [
+        [#{arrayY.join(",")}]
+      ]
+    }, {
+      fullWidth: true,
+      chartPadding: {
+        right: 40
+      }
+    });
+    </script>"
+  .then () ->
+    # building chart #3
+    # construct X array
+    arrayX = ['1','2','3','4','5', '6', '7' ,'8', '9', '10']
+
+    # construct Y array
+    arrayY = []
+    _.each gameData, (d, i) ->
+      arrayY.push d.kda
+
+
+    hdbData['chart3'] = "<script>
+    new Chartist.Line('.kda-chart', {
+      labels: [#{arrayX.join(",")}],
+      series: [
+        [#{arrayY.join(",")}]
+      ]
+    }, {
+      fullWidth: true,
+      chartPadding: {
+        right: 40
+      }
+    });
+    </script>"
+  .then () ->
+    # building chart #3
+    # construct X array
+    arrayX = ['1','2','3','4','5', '6', '7' ,'8', '9', '10']
+
+    # construct Y array
+    arrayY = []
+    _.each gameData, (d, i) ->
+      arrayY.push d.killpermin
+
+
+    hdbData['chart4'] = "<script>
+    new Chartist.Line('.kpm-chart', {
       labels: [#{arrayX.join(",")}],
       series: [
         [#{arrayY.join(",")}]
