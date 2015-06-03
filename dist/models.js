@@ -7,7 +7,7 @@
  */
 
 (function() {
-  var Client, Irelia, Promise, Q, api, api_key, championStatic, client;
+  var Client, Irelia, Promise, Q, _, api, api_key, championStatic, client;
 
   api_key = 'b1d29328-72ca-4d03-b9e2-be254f4379d6';
 
@@ -28,6 +28,8 @@
   Promise = require('promise');
 
   Q = require('q');
+
+  _ = require('lodash');
 
   championStatic = 'https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/';
 
@@ -123,8 +125,24 @@
           }
         });
       });
-      promise = promise.delay(1000);
       return promise;
+    };
+    self.calculateOPS = function(data) {
+      var damageMultifier, ratioPackage;
+      ratioPackage = {
+        damageRatio: data.stats.totalDamageDealt / data.stats.totalDamageTaken,
+        kda: data.stats.championsKilled / data.stats.numDeaths,
+        damageUntilDeath: data.stats.totalDamageDealt / data.stats.numDeaths,
+        damageUntilKill: data.stats.totalDamageTaken / data.stats.championsKilled,
+        turretModifier: data.stats.turretsKilled / (data.stats.timePlayed / 60)
+      };
+      Object.keys(ratioPackage).forEach(function(key) {
+        if (isNaN(ratioPackage[key])) {
+          return ratioPackage[key] = 0.055;
+        }
+      });
+      damageMultifier = ratioPackage.kda * ratioPackage.damageRatio * ratioPackage.turretModifier;
+      return console.log(damageMultifier);
     };
     return self;
   };

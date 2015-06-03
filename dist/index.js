@@ -7,7 +7,7 @@
  */
 
 (function() {
-  var Q, app, express, hbs, model, path, port;
+  var Q, _, app, championMap, champions, config, express, hbs, model, path, port;
 
   express = require('express');
 
@@ -18,6 +18,18 @@
   path = require('path');
 
   Q = require('q');
+
+  _ = require('lodash');
+
+  config = require('./config/server-config.json');
+
+  champions = require('./config/champion.json');
+
+  championMap = {};
+
+  Object.keys(champions.data).forEach(function(key) {
+    return championMap[champions.data[key].key] = key;
+  });
 
   model = require('./models.js')();
 
@@ -38,9 +50,10 @@
   });
 
   app.get('/summoner/:name', function(req, res) {
-    var hdbData, summary, summoner, summonerData, summonerName;
+    var gameData, hdbData, summary, summoner, summonerData, summonerName;
     summonerName = req.params['name'];
     summonerData = {};
+    gameData = [];
     summary = {};
     hdbData = {};
     console.log("User " + req.params['name'] + " querying");
@@ -68,8 +81,7 @@
       var recent;
       return recent = model.getRecentGames(summonerData['id']);
     }).then(function(data) {
-      var gameData, gameResult, games, i, j, len, len1, player, playerDataPromises, players, ref, row, teamID;
-      gameData = [];
+      var gameResult, games, i, j, len, len1, player, playerDataPromises, players, ref, row, teamID;
       players = [];
       playerDataPromises = [];
       games = data['games'];
@@ -98,15 +110,21 @@
           timeM: Math.floor(row.stats.timePlayed / 60),
           timeS: row.stats.timePlayed - Math.floor(row.stats.timePlayed / 60) * 60,
           result: gameResult,
-          championID: row.championId
+          championID: row.championId,
+          multiKill: row.stats.largestMultiKill,
+          gold: (row.stats.goldEarned / 1000).toFixed(3),
+          ward: row.stats.wardPlaced,
+          ip: row.ipEarned,
+          killpermin: (row.stats.championsKilled / Math.floor(row.stats.timePlayed / 60)).toFixed(3),
+          op: model.calculateOPS(row)
         });
-        playerDataPromises.push(model.getSummonersById(players));
         players = [];
       }
-      hdbData['gamedata'] = gameData;
-      return Promise.all(playerDataPromises);
-    }).done(function(results) {
-      return console.log(results);
+      return hdbData['gamedata'] = gameData;
+    }).then(function() {
+      return _.each(gameData, function(d) {
+        return d.championName = championMap[d.championID];
+      });
     }).then(function() {
       console.log('sending response back');
       return res.render('mainView', hdbData);

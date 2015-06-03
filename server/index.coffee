@@ -13,6 +13,15 @@ app = express()
 hbs = require 'hbs'
 path = require 'path'
 Q = require 'q'
+_ = require 'lodash'
+
+# require config and static files
+config = require './config/server-config.json'
+champions = require './config/champion.json'
+championMap = {}
+# construct champion name and ID map
+Object.keys(champions.data).forEach (key) ->
+  championMap[champions.data[key].key] = key
 
 # require models
 model = require('./models.js')()
@@ -35,6 +44,7 @@ app.get '/summoner/:name', (req, res) ->
   # data
   summonerName = req.params['name']
   summonerData = { }
+  gameData = [ ]
   summary = { }
   hdbData = { }
   # get the username from url
@@ -69,7 +79,6 @@ app.get '/summoner/:name', (req, res) ->
   .then (data) ->
 
     # using the data to get metrics
-    gameData = [ ]
     players = [ ]
     playerDataPromises = [ ]
     games = data['games']
@@ -94,19 +103,28 @@ app.get '/summoner/:name', (req, res) ->
         timeM:   Math.floor(row.stats.timePlayed / 60)
         timeS:   row.stats.timePlayed-Math.floor(row.stats.timePlayed / 60) * 60
         result:  gameResult
-        championID : row.championId
+        championID: row.championId
+        multiKill:  row.stats.largestMultiKill
+        gold:       (row.stats.goldEarned / 1000).toFixed(3)
+        ward:       row.stats.wardPlaced
+        ip:         row.ipEarned
+        killpermin: (row.stats.championsKilled /
+        Math.floor(row.stats.timePlayed / 60)).toFixed(3)
+        op:         model.calculateOPS(row)
+        matchID:    row.gameId
 
-      playerDataPromises.push model.getSummonersById players
+      # playerDataPromises.push model.getSummonersById players
 
       players = [ ]
 
     # console.log gameData
     hdbData['gamedata'] = gameData
     # pass array to get player info
+    # return Promise.all(playerDataPromises)
+  .then () ->
+    _.each gameData, (d) ->
+      d.championName = championMap[d.championID]
 
-    return Promise.all(playerDataPromises)
-  .done (results) ->
-    console.log results
   .then () ->
     console.log 'sending response back'
     res.render 'mainView', hdbData

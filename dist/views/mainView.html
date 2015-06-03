@@ -103,13 +103,13 @@
         {{#each gamedata}}
         <div class="row">
           <div class="row {{result}}">
-            <span class="alignleft win-title">{{subtype}}</span>
+            <span class="alignleft win-title">{{subtype}} ({{championName}})</span>
             <span class="alignright win-title">{{result}} ({{timeM}}m {{timeS}}s)</span>
           </div>
           <div class="row">
             <div class="three columns" style="margin-top: 2%">
               <div class="round">
-                <img src="../images/riven.png" />
+                <img src="http://ddragon.leagueoflegends.com/cdn/5.2.1/img/champion/{{championName}}.png" />
               </div>
             </div>
             <div class="three columns" style="margin-top: 5%">
@@ -120,7 +120,7 @@
                 {{kda}}:1 KDA
               </div>
               <div class="row">
-                Double
+                multikill: {{multiKill}}
               </div>
             </div>
           <div class="three columns" style="margin-top: 5%">
@@ -131,26 +131,21 @@
               {{cs}} CS
             </div>
             <div class="row">
-              C/Kill 45%
+              Kill/Min {{killpermin}}
             </div>
           </div>
-          <div class="three columns" style="margin-top: 1%">
+          <div class="three columns" style="margin-top: 5%">
             <div class="row">
-              Hachune Miku
+              {{gold}}k
             </div>
             <div class="row">
-              {{player1}}
+              {{ward}} wards placed
             </div>
             <div class="row">
-              {{player2}}
-            </div>
-            <div class="row">
-              {{player3}}
-            </div>
-            <div class="row">
-              {{player4}}
+              +{{ip}}ip
             </div>
           </div>
+        </div>
           <div class="row">
             <div class="two columns">
               OP meter
@@ -158,7 +153,6 @@
             <div class="ten columns">
               <progress max="100" value="80"></progress>
             </div>
-          </div>
           </div>
         </div>
         <!-- Stop content -->

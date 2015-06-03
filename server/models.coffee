@@ -17,10 +17,13 @@ api = new Irelia
   debug: false
 Promise = require 'promise'
 Q = require 'q'
+_ = require 'lodash'
 
 # static api path
 championStatic =
   'https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/'
+matchAPI =
+  'https://global.api.pvp.net/api/lol/na/v2.2/match/'
 
 
 # creates module for handling requests
@@ -92,7 +95,33 @@ module.exports = () ->
           reject res
         else
           resolve data
-    promise = promise.delay 1000
     return promise
+
+  # get match info
+  self.getMatchInfo = (id) ->
+    promise = new Promise (resolve, reject) ->
+      client.get "#{matchAPI}#{id}?api_key=#{api_key}", (data, res) ->
+        if data == undefined
+          reject res
+        else
+          resolve data
+    return promise
+
+  # calculate op score
+  self.calculateOPS = (data) ->
+    # calculate ratio between dealt and taken
+    ratioPackage =
+      damageRatio: data.stats.totalDamageDealt / data.stats.totalDamageTaken
+      kda: data.stats.championsKilled / data.stats.numDeaths
+      damageUntilDeath: data.stats.totalDamageDealt / data.stats.numDeaths
+      damageUntilKill: data.stats.totalDamageTaken / data.stats.championsKilled
+      turretModifier: data.stats.turretsKilled / (data.stats.timePlayed / 60)
+
+    Object.keys(ratioPackage).forEach (key) ->
+      if isNaN ratioPackage[key]
+        ratioPackage[key] = 0.055
+    damageMultifier = ratioPackage.kda * ratioPackage.damageRatio *
+    ratioPackage.turretModifier
+    console.log damageMultifier
 
   return self
