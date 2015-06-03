@@ -227,7 +227,7 @@ app.get '/summoner/:name', (req, res) ->
     });
     </script>"
   .then () ->
-    # building chart #3
+    # building chart #4
     # construct X array
     arrayX = ['1','2','3','4','5', '6', '7' ,'8', '9', '10']
 
@@ -239,6 +239,30 @@ app.get '/summoner/:name', (req, res) ->
 
     hdbData['chart4'] = "<script>
     new Chartist.Line('.kpm-chart', {
+      labels: [#{arrayX.join(",")}],
+      series: [
+        [#{arrayY.join(",")}]
+      ]
+    }, {
+      fullWidth: true,
+      chartPadding: {
+        right: 40
+      }
+    });
+    </script>"
+  .then () ->
+    # building chart #5
+    # construct X array
+    arrayX = ['1','2','3','4','5', '6', '7' ,'8', '9', '10']
+
+    # construct Y array
+    arrayY = []
+    _.each gameData, (d, i) ->
+      arrayY.push (d.gold / d.timeM * 1000)
+
+
+    hdbData['chart5'] = "<script>
+    new Chartist.Line('.gpm-chart', {
       labels: [#{arrayX.join(",")}],
       series: [
         [#{arrayY.join(",")}]

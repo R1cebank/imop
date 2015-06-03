@@ -172,6 +172,14 @@
       });
       return hdbData['chart4'] = "<script> new Chartist.Line('.kpm-chart', { labels: [" + (arrayX.join(",")) + "], series: [ [" + (arrayY.join(",")) + "] ] }, { fullWidth: true, chartPadding: { right: 40 } }); </script>";
     }).then(function() {
+      var arrayX, arrayY;
+      arrayX = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+      arrayY = [];
+      _.each(gameData, function(d, i) {
+        return arrayY.push(d.gold / d.timeM * 1000);
+      });
+      return hdbData['chart5'] = "<script> new Chartist.Line('.gpm-chart', { labels: [" + (arrayX.join(",")) + "], series: [ [" + (arrayY.join(",")) + "] ] }, { fullWidth: true, chartPadding: { right: 40 } }); </script>";
+    }).then(function() {
       console.log('sending response back');
       return res.render('mainView', hdbData);
     });
