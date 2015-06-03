@@ -28,6 +28,9 @@ app.use express.static path.join __dirname, 'views/public/'
 app.get '/', (req, res) ->
   res.render 'index'
 
+app.get '/riot.txt', (req, res) ->
+  res.send '997c3ed4-8103-481c-8cec-42e688efd5c5'
+
 app.get '/summoner/:name', (req, res) ->
   # data
   summonerName = req.params['name']
@@ -67,9 +70,19 @@ app.get '/summoner/:name', (req, res) ->
 
     # using the data to get metrics
     gameData = [ ]
+    players = [ ]
+    playerDataPromises = [ ]
     games = data['games']
     # contruct the array for template
     for row in games
+      teamID = row.teamId
+      for player in row.fellowPlayers
+        if teamID == player.teamId
+          players.push player.summonerId
+      # console.log players
+      # setting win or lose
+      gameResult = "lose"
+      gameResult = "win" if row.stats.win
       gameData.push
         subtype: row.subType.toLowerCase()
         kill:    row.stats.championsKilled
@@ -78,9 +91,22 @@ app.get '/summoner/:name', (req, res) ->
         level:   row.stats.level
         kda:     (row.stats.championsKilled / row.stats.numDeaths).toFixed(3)
         cs:      row.stats.minionsKilled
+        timeM:   Math.floor(row.stats.timePlayed / 60)
+        timeS:   row.stats.timePlayed-Math.floor(row.stats.timePlayed / 60) * 60
+        result:  gameResult
+        championID : row.championId
 
-    console.log gameData
+      playerDataPromises.push model.getSummonersById players
+
+      players = [ ]
+
+    # console.log gameData
     hdbData['gamedata'] = gameData
+    # pass array to get player info
+
+    return Promise.all(playerDataPromises)
+  .done (results) ->
+    console.log results
   .then () ->
     console.log 'sending response back'
     res.render 'mainView', hdbData

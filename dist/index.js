@@ -33,6 +33,10 @@
     return res.render('index');
   });
 
+  app.get('/riot.txt', function(req, res) {
+    return res.send('997c3ed4-8103-481c-8cec-42e688efd5c5');
+  });
+
   app.get('/summoner/:name', function(req, res) {
     var hdbData, summary, summoner, summonerData, summonerName;
     summonerName = req.params['name'];
@@ -64,11 +68,25 @@
       var recent;
       return recent = model.getRecentGames(summonerData['id']);
     }).then(function(data) {
-      var gameData, games, i, len, row;
+      var gameData, gameResult, games, i, j, len, len1, player, playerDataPromises, players, ref, row, teamID;
       gameData = [];
+      players = [];
+      playerDataPromises = [];
       games = data['games'];
       for (i = 0, len = games.length; i < len; i++) {
         row = games[i];
+        teamID = row.teamId;
+        ref = row.fellowPlayers;
+        for (j = 0, len1 = ref.length; j < len1; j++) {
+          player = ref[j];
+          if (teamID === player.teamId) {
+            players.push(player.summonerId);
+          }
+        }
+        gameResult = "lose";
+        if (row.stats.win) {
+          gameResult = "win";
+        }
         gameData.push({
           subtype: row.subType.toLowerCase(),
           kill: row.stats.championsKilled,
@@ -76,11 +94,19 @@
           assist: row.stats.assists,
           level: row.stats.level,
           kda: (row.stats.championsKilled / row.stats.numDeaths).toFixed(3),
-          cs: row.stats.minionsKilled
+          cs: row.stats.minionsKilled,
+          timeM: Math.floor(row.stats.timePlayed / 60),
+          timeS: row.stats.timePlayed - Math.floor(row.stats.timePlayed / 60) * 60,
+          result: gameResult,
+          championID: row.championId
         });
+        playerDataPromises.push(model.getSummonersById(players));
+        players = [];
       }
-      console.log(gameData);
-      return hdbData['gamedata'] = gameData;
+      hdbData['gamedata'] = gameData;
+      return Promise.all(playerDataPromises);
+    }).done(function(results) {
+      return console.log(results);
     }).then(function() {
       console.log('sending response back');
       return res.render('mainView', hdbData);
