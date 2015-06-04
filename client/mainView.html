@@ -21,6 +21,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="../css/normalize.css">
   <link rel="stylesheet" href="../css/skeleton.css">
+  <link rel="stylesheet" href="../css/animate.css">
   <!--<link rel="stylesheet" href="../css/chart.css"> -->
 
   <!-- Favicon
@@ -102,7 +103,7 @@
       <div class="seven columns">
         <!-- Start content  -->
         {{#each gamedata}}
-        <div class="row">
+        <div class="row animated fadeIn">
           <div class="row {{result}}">
             <span class="alignleft win-title">{{subtype}} ({{championName}})</span>
             <span class="alignright win-title">{{result}} ({{timeM}}m {{timeS}}s)</span>
@@ -160,7 +161,7 @@
         {{/each}}
       </div>
 
-      <div class="five columns">
+      <div class="five columns animated fadeIn">
         <div class="row">
           <h5>op score</h5>
         </div>
