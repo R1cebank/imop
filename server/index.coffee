@@ -334,6 +334,9 @@ app.get '/summoner/:name', (req, res) ->
         console.log 'sending response back'
         res.render 'mainView', hdbData
         # renders the main view
+      .catch (e) ->
+        if e.statusCode is 404
+          res.render 'notFound', name: summonerName
 
 app.use (req, res) ->
   res.status 400
