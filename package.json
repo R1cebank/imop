@@ -22,7 +22,8 @@
     "mongodb": "^2.0.33",
     "node-rest-client": "^1.5.1",
     "promise": "^7.0.1",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "redis": "^0.12.1"
   },
   "devDependencies": {
     "coffee-script": "^1.9.3",

@@ -42,6 +42,15 @@ module.exports = () ->
           resolve db
     return promise
 
+  # insert to redis
+  self.insertRedis = (client, data, key) ->
+    promise = new Promise (resolve, reject) ->
+      client.set key, JSON.stringify(data), (error, reply) ->
+        if error
+          reject error
+        else
+          resolve reply
+
   # lookup records
   self.lookup = (collection, key) ->
     promise = new Promise (resolve, reject) ->

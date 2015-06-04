@@ -1,3 +1,6 @@
 {
-  "mongoUrl": "mongodb://imop:9zFtYDpnDRVKBiwk9KM@ds043012.mongolab.com:43012/heroku_app37442125"
+  "mongoUrl": "mongodb://imop:9zFtYDpnDRVKBiwk9KM@ds043012.mongolab.com:43012/heroku_app37442125",
+  "redisHost": "ec2-54-83-27-212.compute-1.amazonaws.com",
+  "redisPort": 7089,
+  "redisPass": "pdtb7g9cbfhva34ljijf5etb01q"
 }

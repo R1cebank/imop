@@ -7,20 +7,31 @@
 
 # Main server file
 
+# require config and static files
+config = require './config/server-config.json'
+champions = require './config/champion.json'
+championMap = {}
+
 # Required Libs
 express = require 'express'
 
 app = express()
 mongo = require('mongodb').MongoClient
+redis = require 'redis'
+
+# creates redis client
+redisClient = redis.createClient config.redisPort, config.redisHost
+# auth the client using pass
+redisClient.auth config.redisPass
+
+redisClient.on 'connect', () ->
+  console.log 'redis server connected'
+
+
 hbs = require 'hbs'
 path = require 'path'
 Q = require 'q'
 _ = require 'lodash'
-
-# require config and static files
-config = require './config/server-config.json'
-champions = require './config/champion.json'
-championMap = {}
 
 # construct champion name and ID map
 Object.keys(champions.data).forEach (key) ->
@@ -328,9 +339,14 @@ app.get '/summoner/:name', (req, res) ->
         console.log "record deleted"
         # insert promise
         insertPromise = model.insert summoner, hdbData
+
       .then (docs) ->
         console.log "record inserted"
-      .then () ->
+        # inserting redis record
+
+        redisPromise = model.insertRedis redisClient, hdbData, hdbData['name'].toLowerCase()
+      .then (resolt) ->
+        console.log 'redis record inserted'
         console.log 'sending response back'
         res.render 'mainView', hdbData
         # renders the main view
