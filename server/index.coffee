@@ -9,6 +9,7 @@
 
 # Required Libs
 express = require 'express'
+
 app = express()
 mongo = require('mongodb').MongoClient
 hbs = require 'hbs'
@@ -334,6 +335,9 @@ app.get '/summoner/:name', (req, res) ->
         res.render 'mainView', hdbData
         # renders the main view
 
+app.use (req, res) ->
+  res.status 400
+  res.render '404.jade', title: '404: File Not Found'
 port = process.env.PORT || 3939
 
 app.listen port

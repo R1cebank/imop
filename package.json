@@ -12,8 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.12.4",
+    "express-common-errors": "^0.1.0",
     "hbs": "^3.0.1",
     "irelia": "^0.2.5",
+    "jade": "^1.10.0",
     "league-node": "0.0.4",
     "lodash": "^3.9.3",
     "lol-apiwrapper": "^1.0.6",
