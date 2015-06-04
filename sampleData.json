@@ -1,0 +1,78 @@
+{
+         "fellowPlayers": [
+            {
+               "championId": 67,
+               "teamId": 200,
+               "summonerId": 35433413
+            },
+            {
+               "championId": 104,
+               "teamId": 200,
+               "summonerId": 48650162
+            },
+            {
+               "championId": 86,
+               "teamId": 200,
+               "summonerId": 68049407
+            },
+            {
+               "championId": 157,
+               "teamId": 200,
+               "summonerId": 20606696
+            }
+         ],
+         "gameType": "MATCHED_GAME",
+         "stats": {
+            "totalDamageDealtToChampions": 25048,
+  "item2": 3143,
+            "goldEarned": 12270,
+  "item1": 3074,
+            "wardPlaced": 5,
+            "totalDamageTaken": 19776,
+  "item0": 3071,
+            "trueDamageDealtPlayer": 122,
+            "physicalDamageDealtPlayer": 84965,
+            "trueDamageDealtToChampions": 64,
+            "killingSprees": 1,
+            "playerRole": 1,
+            "totalUnitsHealed": 1,
+            "playerPosition": 1,
+            "level": 15,
+            "doubleKills": 4,
+            "turretsKilled": 1,
+            "neutralMinionsKilledEnemyJungle": 7,
+            "assists": 10,
+            "magicDamageTaken": 9408,
+            "numDeaths": 2,
+            "totalTimeCrowdControlDealt": 134,
+            "largestMultiKill": 2,
+            "physicalDamageTaken": 8840,
+            "team": 200,
+            "win": true,
+            "totalDamageDealt": 85087,
+            "largestKillingSpree": 20,
+            "totalHeal": 545,
+  "item4": 1036,
+  "item3": 3035,
+  "item6": 3340,
+            "minionsKilled": 90,
+            "timePlayed": 1503,
+            "physicalDamageDealtToChampions": 24984,
+            "championsKilled": 20,
+            "trueDamageTaken": 1527,
+            "goldSpent": 11915,
+            "neutralMinionsKilled": 7
+         },
+         "gameId": 1824841255,
+         "ipEarned": 53,
+         "spell1": 4,
+         "teamId": 200,
+         "spell2": 12,
+         "gameMode": "CLASSIC",
+         "mapId": 11,
+         "level": 30,
+         "invalid": false,
+         "subType": "BOT",
+         "createDate": 1431714311928,
+         "championId": 92
+      }
