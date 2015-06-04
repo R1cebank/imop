@@ -8,6 +8,8 @@ api_key = 'b1d29328-72ca-4d03-b9e2-be254f4379d6'
 # required library
 Client = require('node-rest-client').Client
 client = new Client()
+mongo = require('mongodb').MongoClient
+
 Irelia = require 'irelia'
 api = new Irelia
   secure: true
@@ -29,6 +31,44 @@ matchAPI =
 # creates module for handling requests
 module.exports = () ->
   self = { }
+
+  # connect mongodb database
+  self.connectDB = (url) ->
+    promise = new Promise (resolve, reject) ->
+      mongo.connect url, (error, db) ->
+        if error
+          reject error
+        else
+          resolve db
+    return promise
+
+  # lookup records
+  self.lookup = (collection, key) ->
+    promise = new Promise (resolve, reject) ->
+      collection.findOne name: {$regex: new RegExp("^" + key.toLowerCase(), "i")}, (err, doc) ->
+        if err
+          reject err
+        else
+          resolve doc
+
+  # insert to collection
+  self.insert = (collection, data) ->
+    promise = new Promise (resolve, reject) ->
+      collection.insert data, (error, docs) ->
+        if error
+          reject error
+        else
+          resolve docs
+
+  # remove post from collection
+  self.remove = (collection, key) ->
+    promise = new Promise (resolve, reject) ->
+      collection.remove name: {$regex: new RegExp("^" + key.toLowerCase(), "i")}, (err, result) ->
+        if err
+          reject err
+        else
+          resolve collection
+
 
   # get summoner information by name
   self.getSummonerByName = (name) ->

@@ -17,6 +17,7 @@
     "league-node": "0.0.4",
     "lodash": "^3.9.3",
     "lol-apiwrapper": "^1.0.6",
+    "mongodb": "^2.0.33",
     "node-rest-client": "^1.5.1",
     "promise": "^7.0.1",
     "q": "^1.4.1"
