@@ -4,7 +4,7 @@
  # Copyright (c) 2015 Siyuan Gao
  # Licensed under the MIT license
 ###
-api_key = 'b1d29328-72ca-4d03-b9e2-be254f4379d6'
+api_key = '02a69f77-4077-4511-857a-fc4cdf47cb49'
 # required library
 Client = require('node-rest-client').Client
 client = new Client()
