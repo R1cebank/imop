@@ -1,13 +1,6 @@
 {
-  "redis": {
-    "host": "ec2-54-83-27-212.compute-1.amazonaws.com",
-    "port": 7089,
-    "pass": "pdtb7g9cbfhva34ljijf5etb01q"
-  },
-  "mongo": {
-    "url": "mongodb://imop:9zFtYDpnDRVKBiwk9KM@ds043012.mongolab.com:43012/heroku_app37442125"
-  },
-  "api": {
-    "key": "02a69f77-4077-4511-857a-fc4cdf47cb49"
-  }
+  "mongoUrl": "mongodb://imop:9zFtYDpnDRVKBiwk9KM@ds043012.mongolab.com:43012/heroku_app37442125",
+  "redisHost": "ec2-54-83-27-212.compute-1.amazonaws.com",
+  "redisPort": 7089,
+  "redisPass": "pdtb7g9cbfhva34ljijf5etb01q"
 }
