@@ -1,11 +1,18 @@
 ###
+          _|
+_|_|_|  _|    _|      _|        _|_|    _|_|_|
+  _|          _|_|  _|_|      _|    _|  _|    _|
+  _|          _|  _|  _|      _|    _|  _|_|_|
+  _|          _|      _|      _|    _|  _|
+_|_|_|        _|      _|        _|_|    _|
+
  # I'M OP
  # https://github.com/r1cebank/imop
  # Copyright (c) 2015 Siyuan Gao
  # Licensed under the MIT license
 ###
 
-module.exports = () ->
+module.exports = (config) ->
   # init object
   self = { }
 
@@ -13,7 +20,7 @@ module.exports = () ->
     res.render 'index'
 
   self.key = (req, res) ->
-    res.send '997c3ed4-8103-481c-8cec-42e688efd5c5'
+    res.send config.riot.txt
 
   # return this object
   return self

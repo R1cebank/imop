@@ -1,4 +1,11 @@
 ###
+          _|
+_|_|_|  _|    _|      _|        _|_|    _|_|_|
+  _|          _|_|  _|_|      _|    _|  _|    _|
+  _|          _|  _|  _|      _|    _|  _|_|_|
+  _|          _|      _|      _|    _|  _|
+_|_|_|        _|      _|        _|_|    _|
+
  # I'M OP
  # https://github.com/r1cebank/imop
  # Copyright (c) 2015 Siyuan Gao
@@ -9,8 +16,13 @@ express = require 'express'
 hbs = require 'hbs'
 path = require 'path'
 app = express()
+
+# require config and static files
+config = require './config/server-config.json'
+
+# require custom files
 routes = require('./routes')()
-serveHandler = require('./handlers/serve')()
+serveHandler = require('./handlers/serve')(config)
 summonerHandler = require('./handlers/summoner')()
 
 handlers =
