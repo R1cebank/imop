@@ -21,7 +21,7 @@
     "jade": "^1.10.0",
     "league-node": "0.0.4",
     "lodash": "^3.9.3",
-    "lol-apiwrapper": "^1.0.6",
+    "node-rest-client": "^1.5.1",
     "mongodb": "^2.0.33",
     "promise": "^7.0.1",
     "q": "^1.4.1",
