@@ -54,7 +54,7 @@ app.get '/', (req, res) ->
 
 # used for riot application verification
 app.get '/riot.txt', (req, res) ->
-  res.send '997c3ed4-8103-481c-8cec-42e688efd5c5'
+  res.send 'e6303483-9e74-4d9f-af72-74006b02bb1c'
 
 app.get '/summoner/:name/update', (req, res) ->
   # data
